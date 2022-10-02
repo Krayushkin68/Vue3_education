@@ -11,8 +11,11 @@
             </div>
         </div>
         <div class="row">
-            <PostList v-if="!isPostsLoading" :posts="sortedAndSearchedPosts" @delete-post="DeletePost"/>
-            <div v-else>Идет загрузка постов</div>
+            <div v-if="!isPostsLoading">
+                <PostList :posts="sortedAndSearchedPosts" @delete-post="DeletePost"/>
+                <PaginationNav :totalPages="totalPages" :page="page" @change-page="changePage"/>
+            </div>
+            <div v-else>Идет загрузка постов...</div>
         </div>
     </div>
 </template>
@@ -21,6 +24,7 @@
     import PostList from "@/components/PostList";
     import PostForm from "@/components/PostForm";
     import CustomSelect from "@/components/CustomSelect";
+    import PaginationNav from "@/components/PaginationNav";
     import axios from 'axios';
 
     export default {
@@ -28,13 +32,17 @@
         components: {
             PostList,
             PostForm,
-            CustomSelect
+            CustomSelect,
+            PaginationNav
         },
         data() {
             return {
                 posts: [],
                 isPostsLoading: false,
                 isPostFormVisible: false,
+                page: 1,
+                limit: 10,
+                totalPages: 0,
                 searchQuery: '',
                 selectedSort: '',
                 sortOptions: [
@@ -55,11 +63,22 @@
             TogglePostForm() {
                 this.isPostFormVisible = !this.isPostFormVisible
             },
+            changePage(pageNum) {
+                this.page = pageNum
+            },
             async fetchPosts() {
                 this.isPostsLoading = true;
                 await axios
-                    .get('https://jsonplaceholder.typicode.com/posts?_limit=10')
-                    .then(response => this.posts = response.data)
+                    .get('https://jsonplaceholder.typicode.com/posts', {
+                        params: {
+                            _page: this.page,
+                            _limit: this.limit
+                        }
+                    })
+                    .then(response => {
+                        this.posts = response.data
+                        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+                    })
                     .catch(() => alert('Ошибка соединения с сервером'))
                     .finally(() => this.isPostsLoading = false)
             }
@@ -73,6 +92,11 @@
             },
             sortedAndSearchedPosts() {
                 return this.sortedPosts.filter(p => p.title.includes(this.searchQuery))
+            }
+        },
+        watch: {
+            page() {
+                this.fetchPosts()
             }
         }
     }
