@@ -4,7 +4,7 @@
             <PostForm @create-post="CreatePost"/>
         </div>
         <div class="row">
-            <PostList :posts="posts"/>
+            <PostList :posts="posts" @delete-post="DeletePost"/>
         </div>
     </div>
 </template>
@@ -33,6 +33,10 @@
         methods: {
             CreatePost(post) {
                 this.posts.push(post);
+            },
+            DeletePost(post) {
+                console.log(post)
+                this.posts = this.posts.filter(p => p.id !== post.id)
             }
         }
     }

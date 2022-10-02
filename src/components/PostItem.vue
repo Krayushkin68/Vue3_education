@@ -8,7 +8,7 @@
                         <p class="card-text">{{ post.body }}</p>
                     </div>
                     <div class="col col-2">
-                        <button class="btn btn-outline-danger float-end">Удалить</button>
+                        <button class="btn btn-outline-danger float-end" @click="DeletePost">Удалить</button>
                     </div>
                 </div>
             </div>
@@ -23,6 +23,11 @@
             post: {
                 type: Object,
                 required: true
+            }
+        },
+        methods: {
+            DeletePost() {
+                this.$emit('delete-post', this.post)
             }
         }
     }

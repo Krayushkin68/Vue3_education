@@ -1,6 +1,6 @@
 <template>
     <div id="posts">
-        <PostItem v-for="(post, index) in posts" :post="post" :key="index"/>
+        <PostItem v-for="post in posts" :post="post" :key="post.id" @delete-post="DeletePost"/>
     </div>
 </template>
 
@@ -16,6 +16,11 @@
             posts: {
                 type: Array,
                 required: true
+            }
+        },
+        methods: {
+            DeletePost(post) {
+                this.$emit('delete-post', post)
             }
         }
     }
