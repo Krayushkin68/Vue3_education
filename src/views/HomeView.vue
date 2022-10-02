@@ -1,16 +1,17 @@
 <template>
     <div class="container">
         <div class="row align-items-end">
-            <div class="col col-9">
+            <div class="col col-8">
                 <PostForm v-if="isPostFormVisible" @create-post="CreatePost" @close-post-form="TogglePostForm"/>
                 <button v-else class="btn btn-primary mb-3" @click="TogglePostForm">Создать пост</button>
             </div>
-            <div class="col col-3">
+            <div class="col col-4">
+                <input type="text" class="form-control mb-1" id="title" placeholder="Поиск..." v-model="searchQuery">
                 <CustomSelect v-model="selectedSort" :options="sortOptions"/>
             </div>
         </div>
         <div class="row">
-            <PostList v-if="!isPostsLoading" :posts="sortedPosts" @delete-post="DeletePost"/>
+            <PostList v-if="!isPostsLoading" :posts="sortedAndSearchedPosts" @delete-post="DeletePost"/>
             <div v-else>Идет загрузка постов</div>
         </div>
     </div>
@@ -34,6 +35,7 @@
                 posts: [],
                 isPostsLoading: false,
                 isPostFormVisible: false,
+                searchQuery: '',
                 selectedSort: '',
                 sortOptions: [
                     {value: 'title', name: 'По названию'},
@@ -68,6 +70,9 @@
         computed: {
             sortedPosts() {
                 return [...this.posts].sort((p1, p2) => p1[this.selectedSort]?.localeCompare(p2[this.selectedSort]))
+            },
+            sortedAndSearchedPosts() {
+                return this.sortedPosts.filter(p => p.title.includes(this.searchQuery))
             }
         }
     }
