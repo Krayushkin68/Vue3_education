@@ -4,7 +4,8 @@
             <PostForm @create-post="CreatePost"/>
         </div>
         <div class="row">
-            <PostList :posts="posts" @delete-post="DeletePost"/>
+            <PostList v-if="!isPostsLoading" :posts="posts" @delete-post="DeletePost"/>
+            <div v-else>Идет загрузка постов</div>
         </div>
     </div>
 </template>
@@ -13,6 +14,7 @@
     // @ is an alias to /src
     import PostList from "@/components/PostList";
     import PostForm from "@/components/PostForm";
+    import axios from 'axios';
 
     export default {
         name: 'HomeView',
@@ -22,12 +24,8 @@
         },
         data() {
             return {
-                posts: [
-                    {id: 1, title: "Пост о фронтенде", body: "Содержание поста о фронтенде"},
-                    {id: 2, title: "Пост о Vue", body: "Содержание поста о Vue"},
-                    {id: 3, title: "Пост о Vue-CLI", body: "Содержание поста о Vue-CLI"},
-                    {id: 4, title: "Пост о Vue Router", body: "Содержание поста о Vue Router"}
-                ]
+                posts: [],
+                isPostsLoading: false
             }
         },
         methods: {
@@ -37,7 +35,18 @@
             DeletePost(post) {
                 console.log(post)
                 this.posts = this.posts.filter(p => p.id !== post.id)
+            },
+            async fetchPosts() {
+                this.isPostsLoading = true;
+                await axios
+                    .get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+                    .then(response => this.posts = response.data)
+                    .catch(() => alert('Ошибка соединения с сервером'))
+                    .finally(() => this.isPostsLoading = false)
             }
+        },
+        mounted() {
+            this.fetchPosts();
         }
     }
 </script>
