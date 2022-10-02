@@ -6,16 +6,11 @@
                 <button v-else class="btn btn-primary mb-3" @click="TogglePostForm">Создать пост</button>
             </div>
             <div class="col col-3">
-                <select class="form-select mb-3" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
+                <CustomSelect v-model="selectedSort" :options="sortOptions"/>
             </div>
         </div>
         <div class="row">
-            <PostList v-if="!isPostsLoading" :posts="posts" @delete-post="DeletePost"/>
+            <PostList v-if="!isPostsLoading" :posts="sortedPosts" @delete-post="DeletePost"/>
             <div v-else>Идет загрузка постов</div>
         </div>
     </div>
@@ -24,19 +19,26 @@
 <script>
     import PostList from "@/components/PostList";
     import PostForm from "@/components/PostForm";
+    import CustomSelect from "@/components/CustomSelect";
     import axios from 'axios';
 
     export default {
         name: 'HomeView',
         components: {
             PostList,
-            PostForm
+            PostForm,
+            CustomSelect
         },
         data() {
             return {
                 posts: [],
                 isPostsLoading: false,
-                isPostFormVisible: false
+                isPostFormVisible: false,
+                selectedSort: '',
+                sortOptions: [
+                    {value: 'title', name: 'По названию'},
+                    {value: 'body', name: 'По описанию'}
+                ]
             }
         },
         methods: {
@@ -62,6 +64,11 @@
         },
         mounted() {
             this.fetchPosts();
+        },
+        computed: {
+            sortedPosts() {
+                return [...this.posts].sort((p1, p2) => p1[this.selectedSort]?.localeCompare(p2[this.selectedSort]))
+            }
         }
     }
 </script>
