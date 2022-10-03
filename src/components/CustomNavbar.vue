@@ -10,7 +10,12 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <router-link to="/" class="nav-link" :class="{active: isActive('/')}">
-                            Home
+                            Posts
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/store" class="nav-link" :class="{active: isActive('/store')}">
+                            Posts Store
                         </router-link>
                     </li>
                     <li class="nav-item">

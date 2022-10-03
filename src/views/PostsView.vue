@@ -29,7 +29,7 @@
     import axios from 'axios';
 
     export default {
-        name: 'HomeView',
+        name: 'PostsView',
         components: {
             PostList,
             PostForm,
