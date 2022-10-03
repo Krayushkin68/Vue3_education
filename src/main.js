@@ -5,5 +5,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-createApp(App).use(store).use(router).mount('#app')
+import VIntersection from "@/directives/VIntersection";
+
+
+const app = createApp(App)
+
+app.directive('intersection', VIntersection)
+
+app.use(store).use(router).mount('#app')
 

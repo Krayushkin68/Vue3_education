@@ -16,6 +16,7 @@
                 <PaginationNav :totalPages="totalPages" :page="page" @change-page="changePage"/>
             </div>
             <div v-else>Идет загрузка постов...</div>
+            <div v-intersection="loadMorePosts" class="observer"></div>
         </div>
     </div>
 </template>
@@ -81,6 +82,9 @@
                     })
                     .catch(() => alert('Ошибка соединения с сервером'))
                     .finally(() => this.isPostsLoading = false)
+            },
+            loadMorePosts() {
+                console.log('Load more posts')
             }
         },
         mounted() {
