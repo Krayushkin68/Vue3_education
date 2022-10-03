@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col col-10">
-                        <h5 class="card-title">{{ post.title }}</h5>
+                        <h5 class="card-title" @click="$router.push(`/posts/${post.id}`)">{{ post.title }}</h5>
                         <p class="card-text">{{ post.body }}</p>
                     </div>
                     <div class="col col-2">
@@ -34,5 +34,7 @@
 </script>
 
 <style scoped>
-
+    .card-title {
+        cursor: pointer;
+    }
 </style>

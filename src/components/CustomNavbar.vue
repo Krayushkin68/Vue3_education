@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <nav class="navbar navbar-light bg-light navbar-expand-lg mb-3">
         <div class="container">
             <a class="navbar-brand" href="/">MyApp</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
